@@ -92,15 +92,27 @@ imputed <- df
 imputed$steps = filled
 ```
 
-We can now recompute the mean and median total number of steps taken per day using the imputed dataset. 
 
-Find the total number of steps taken each day:
+
+
+
+Compute the total number of steps taken each day:
 
 ```r
 imputed.agg <- aggregate(steps ~ date, data = imputed, sum)
 ```
 
-We can now calculate the mean total number of steps taken per day:
+Examine a histogram of the total number of steps taken each day *after* missing values have been imputed:
+
+```r
+hist(imputed.agg$steps)
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-12-1.png) 
+
+Use these totals from the imputed dataset to recompute the mean and median total number of steps taken per day.  
+
+Calculate the mean total number of steps taken per day:
 
 ```r
 mean(imputed.agg$steps)
@@ -110,7 +122,7 @@ mean(imputed.agg$steps)
 ## [1] 10766.19
 ```
 
-and the median total number of steps taken per day:
+Calculate the median total number of steps taken per day:
 
 ```r
 median(imputed.agg$steps)
@@ -120,7 +132,7 @@ median(imputed.agg$steps)
 ## [1] 10766.19
 ```
 
-The mean and median total number of steps taken per day for the original dataset were 1.0766189\times 10^{4} and 10765, respectively. The values for imputed dataset are the roughly the same and the impact is negligible.
+The mean and median total number of steps taken per day for the original dataset were 1.0766189\times 10^{4} and 10765, respectively. The mean is unchanged and the median has shifted to now equal the mean. These measures of central tendency for both the original and imputed datasets are very similar and the impact of imputation is likely negligible.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
@@ -131,7 +143,7 @@ library(timeDate)
 imputed$week = factor(isWeekday(imputed$date), levels=c(TRUE, FALSE), labels=c('weekday', 'weekend'))
 ```
 
-Next we calculate the mean number of steps for each interval, averaged across all weekdays and weekends seperately.
+Next we consider two groups of observations (weekday/weekend) and calculate the mean number of steps for each interval, averaged across all days in their respective groups.
 
 ```r
 imputed.agg.week <- aggregate(steps ~ interval + week, data = imputed, mean)
@@ -144,4 +156,4 @@ library(lattice)
 xyplot(steps ~ interval | week, data=imputed.agg.week, type="l")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-16-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-17-1.png) 
